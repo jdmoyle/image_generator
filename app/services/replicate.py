@@ -2,6 +2,7 @@ import httpx
 import requests
 from app.config import settings
 from app.schemas.auth import TokenResponse
+from app.services.token import token_manager
 
 # REPLICATE_BASE_URL = "https://api.replicate.com/v1"
 
@@ -42,14 +43,18 @@ class ReplicateService:
             else:
                 raise Exception(f"Failed to generate image: {response.text}")
             
+    
     @staticmethod
-    def fetch_oauth_token()->TokenResponse:
+    def fetch_image_generation_data(payload)->TokenResponse:
+        
+        token = token_manager.get_valid_token()
+
         headers = {
-            "Authorization":f"Bearer {settings.REPLICATE_API_URL}",
+            "Authorization":f"Bearer {token}",
             "Content-Type":"application/json",
         }
 
-        response = requests.post(settings.REPLICATE_API_URL,headers=headers)
+        response = requests.post(settings.REPLICATE_API_URL, json = payload,headers=headers)
         response.raise_for_status()
 
         return TokenResponse(**response.json())
