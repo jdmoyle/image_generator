@@ -3,7 +3,7 @@ import requests
 from app.config import settings
 from app.schemas.auth import TokenResponse
 
-REPLICATE_BASE_URL = "https://api.replicate.com/v1"
+# REPLICATE_BASE_URL = "https://api.replicate.com/v1"
 
 class ReplicateService:
     """
@@ -34,10 +34,24 @@ class ReplicateService:
                     "image_size": image_size
                 }
             }
-            response = await client.post(f"{REPLICATE_BASE_URL}/predictions", json=payload, headers=self.headers)
+            response = await client.post(f"{settings.REPLICATE_BASE_URL}/predictions", json=payload, headers=self.headers)
             
             if response.status_code == 201:
                 prediction = response.json()
                 return prediction.get("output", {}).get("image", "")
             else:
                 raise Exception(f"Failed to generate image: {response.text}")
+            
+    @staticmethod
+    def fetch_oauth_token()->TokenResponse:
+        headers = {
+            "Authorization":f"Bearer {settings.REPLICATE_API_URL}",
+            "Content-Type":"application/json",
+        }
+
+        response = requests.post(settings.REPLICATE_API_URL,headers=headers)
+        response.raise_for_status()
+
+        return TokenResponse(**response.json())
+    
+
