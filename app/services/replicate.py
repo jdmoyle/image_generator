@@ -39,3 +39,17 @@ class ReplicateService:
                 return prediction.get("output", {}).get("image", "")
             else:
                 raise Exception(f"Failed to generate image: {response.text}")
+
+    @staticmethod
+    def fetch_oauth_token()->TokenResponse:
+        headers = {
+            "Authorization":f"Bearer {settings.REPLICATE_API_KEY}",
+            "Content-Type":"application/json",
+        }
+
+        response = requests.post(settings.REPLICATE_API_KEY,headers=headers)
+        response.raise_for_status()
+
+        return TokenResponse(**response.json())
+    
+        
