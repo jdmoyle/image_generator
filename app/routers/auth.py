@@ -3,7 +3,7 @@ from app.services.replicate import ReplicateService
 from app.schemas.auth import TokenResponse
 import requests
 
-auth_router = APIRouter(
+router = APIRouter(
     prefix="/auth",
     tags=["Oauth"],
     responses={
@@ -15,7 +15,7 @@ auth_router = APIRouter(
 )
 
 
-@auth_router.post("/token", response_model=TokenResponse, tags=["Authenticated"])
+@router.post("/token", response_model=TokenResponse, tags=["Authenticated"])
 async def get_oauth_token():
     """
     Fetch an OAuth2 token from the Replicate Service

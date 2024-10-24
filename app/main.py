@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import image
+from app.routers import image,auth
 from app.utils.logging import setup_logger
 
 # Initialize FastAPI app
@@ -14,6 +14,7 @@ logger = setup_logger("ReplicateAPI")
 
 # Include the routers
 app.include_router(image.router)
+app.include_router(auth.router)
 
 @app.on_event("startup")
 async def startup_event():
