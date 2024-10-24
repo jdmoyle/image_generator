@@ -29,7 +29,7 @@ class ReplicateService:
         """
         async with httpx.AsyncClient() as client:
             payload = {
-                "version": settings.REPLICATE_MODEL_NAME,
+                "version": model_version or settings.REPLICATE_MODEL_NAME,
                 "input": {
                     "prompt": prompt,
                     "image_size": image_size
